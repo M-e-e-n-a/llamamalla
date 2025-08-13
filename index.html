@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Letter For You</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for a cute, handwritten style -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Patrick+Hand&family=Kalam:wght@300;400&display=swap" rel="stylesheet">
+
+    <!-- Styles for the page, envelope, and book -->
+    <style>
+        /* Apply custom fonts */
+        body {
+            font-family: 'Kalam', cursive; /* A more letter-like font */
+            background-color: #fdf6e3; /* A soft, parchment-like color */
+        }
+        .font-handwriting {
+            font-family: 'Kalam', cursive;
+        }
+        .font-title {
+            font-family: 'Caveat', cursive;
+        }
+
+        /* Envelope styles */
+        .envelope-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fdf6e3;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.7s ease-in-out;
+        }
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: #f0e4d0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #e9d9c2;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: top;
+            transition: transform 0.5s ease-in-out;
+        }
+        .envelope-body {
+            position: absolute;
+            top: 100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #f0e4d0;
+            border-radius: 0 0 10px 10px;
+        }
+        .envelope-seal {
+            position: absolute;
+            top: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: #e57373; /* A cute red seal */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        /* Animation for opening */
+        .envelope-wrapper.opened .envelope-flap {
+            transform: rotateX(180deg);
+        }
+        .envelope-wrapper.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Book/Letter styles */
+        .book-container {
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem 1rem 3rem 1rem;
+        }
+        .book-page {
+            background-color: #fffaf0;
+            border: 1px solid #eaddc7;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 700px;
+            min-height: 550px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 1. The Envelope Screen -->
+    <div id="envelope-wrapper" class="envelope-wrapper">
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-body"></div>
+            <div class="envelope-seal">💌</div>
+        </div>
+        <p class="absolute bottom-10 font-title text-2xl text-gray-500">Click the envelope to open</p>
+    </div>
+
+    <!-- 2. The Main Letter/Book Content -->
+    <div id="book-container" class="book-container">
+        
+        <div class="book-page p-6 md:p-10 flex flex-col justify-between">
+            
+            <!-- Page Content (dynamically changed) -->
+            <div id="page-content" class="flex-grow text-gray-800 text-lg">
+                <!-- Pages will be loaded here -->
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
+                <button id="prev-button" class="bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded-full transition-all hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed">
+                    &larr; Previous
+                </button>
+                <div id="page-number" class="font-handwriting text-gray-500"></div>
+                <button id="next-button" class="bg-teal-500 text-white font-bold py-2 px-4 rounded-full transition-all hover:bg-teal-600">
+                    Next &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONTENT FOR YOUR PAGES ---
+        // I've updated the text and images as you requested!
+        const pages = [
+            // Page 1: First memories
+            `
+            <div class="flex flex-col justify-center h-full">
+                <h1 class="font-title text-4xl text-teal-600 mb-6">Hi Malala!</h1>
+                <p>
+                    I remember the first time I met you. It was in this cramped up classroom singing with Arkash during some orientation. You seemed like a very simple, easy friend I could make. Our moms met, and we were both happy to have found someone in the middle of the chaos we were dumped into. 🦙
+                </p>
+                <p class="mt-4">
+                    I was pretty surprised by the number of girls there were in the first class, and we somehow ended up partially in the same friend group and kept interacting. I realized then that I was wrong about how social I thought you were. You were the silent but smiley type of person.
+                </p>
+            </div>
+            `,
+            // Page 2: School days + Your Photo
+            `
+            <div class="flex flex-col justify-center h-full">
+                 <p>
+                    NPS flew by, mostly 'cause I don't want to remember much from those years. I was so excited to be friends with you and Indu when I first joined and I still remember the shock on your face when you first saw me in the assembly. In school, I thought you were this cool, efficient, OCD-type of girl, and compared to my tardy personality, yours felt like a calming presence. You've grounded my big cheerful, loud side. 🦙
+                 </p>
+                 <div class="text-center my-6">
+                    <div class="inline-block bg-white p-3 rounded-lg shadow-lg transform -rotate-2">
+                        <img src="http://googleusercontent.com/file_content/2" alt="A fun memory" class="rounded-md max-w-xs">
+                    </div>
+                    <p class="font-handwriting text-md text-gray-500 mt-2 transform rotate-1">(new phone, no pics :()</p>
+                 </div>
+            </div>
+            `,
+            // Page 3: College + NYU/NYC
+            `
+            <div class="flex flex-col justify-center h-full">
+                <p>
+                    JEE happened, and I had never imagined us going to the same college. But, it happened, and it felt insane. It was so nice to have you and Niyadi by my side. From the first day our paths crossed yet again when you moved to NCSE.
+                </p>
+                <p class="mt-4">
+                    Oh please gods! I remember the 'hangout' we went on, bunking Design Thinking before you moved... I can't possibly think of a more awkward experience I've had in my life! We didn't even want to take our masks off. You can be pretty social, you know? You just needed a little push sometimes. 🦙
+                </p>
+                <div class="text-center my-6">
+                    <img src="https://images.unsplash.com/photo-1542379363-3526a1a723d3?q=80&w=2070&auto=format&fit=crop" alt="New York City" class="rounded-lg shadow-lg w-full max-w-md mx-auto">
+                     <p class="text-sm text-gray-500 mt-2">Your new adventure in NYC! 🗽</p>
+                </div>
+            </div>
+            `,
+            // Page 4: Rollercoaster
+            `
+            <div class="flex flex-col justify-center h-full">
+                <p>
+                    College was a rollercoaster ride for me, you, everyone. I've learned a lot, changed a lot, been hurt and fooled a lot, and also hurt people a lot. I'm glad I got to experience that part of my life with you. I'm not all that ready to just say goodbye yet.
+                </p>
+                <p class="mt-4">
+                    We faced a lot of hurdles during the mini & final year project, and those memories are still fresh in my mind. And somehow, after our recent hangouts, I've been able to let go of all the bitter moments we've had, because I truly believe you're growing past it, and I'm gonna get to see a beautiful version of you soon. 🦙
+                </p>
+            </div>
+            `,
+            // Page 5: Farewell & Encouragement
+            `
+            <div class="flex flex-col justify-center h-full">
+                <p>
+                    You have loads to take on @ NYC. I am so fucking excited to see the kind of person you're going to become after that experience. I truly hope you have the best fucking experience of your life, and achieve better than you've dreamed. Fucking crush it, dude, you got this.
+                </p>
+                <p class="mt-4">
+                    I am and will be cheering you on aggressively. I will scream loud to celebrate your wins and love you loudly. Don't you dare get sad. Don't you dare hurt yourself or think you aren't good enough. Don't you dare compare, and don't overthink, just do. 🦙
+                </p>
+            </div>
+            `,
+            // Page 6: Final Words & Download Link
+            `
+            <div class="text-center flex flex-col items-center justify-center h-full">
+                <p class="font-handwriting text-2xl text-gray-700 max-w-prose mb-8">
+                    I want to know everything. We might not talk everyday, but I hope we can get on VC once in a while and talk about each other's lives. I hope we cross paths again, and get to work in the same city soon.
+                    <br><br>
+                    I'm usually really hesitant to call people this, but you are my best friend, and you deserve the best. 🦙
+                </p>
+                <div class="font-title text-5xl md:text-6xl text-rose-500 my-8">
+                    I love you.
+                    <br>
+                    - Meena
+                </div>
+                <a href="letter.pdf" download="Letter-from-Meena.pdf" class="bg-green-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-green-600 transition-all">
+                    Download the Original Letter (PDF)
+                </a>
+            </div>
+            `
+        ];
+
+        // --- JAVASCRIPT LOGIC ---
+        const envelopeWrapper = document.getElementById('envelope-wrapper');
+        const bookContainer = document.getElementById('book-container');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const pageContent = document.getElementById('page-content');
+        const pageNumber = document.getElementById('page-number');
+        
+        let currentPage = 0;
+
+        // Function to render the current page
+        function renderPage() {
+            pageContent.innerHTML = pages[currentPage];
+            pageNumber.textContent = `Page ${currentPage + 1} of ${pages.length}`;
+            prevButton.disabled = currentPage === 0;
+            nextButton.disabled = currentPage === pages.length - 1;
+        }
+
+        // Event listener for opening the envelope
+        envelopeWrapper.addEventListener('click', () => {
+            envelopeWrapper.classList.add('opened');
+            // Wait for the flap animation to finish
+            setTimeout(() => {
+                envelopeWrapper.classList.add('hidden');
+                bookContainer.style.display = 'flex'; // Show the book
+            }, 700);
+        });
+
+        // Event listeners for page navigation
+        nextButton.addEventListener('click', () => {
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                renderPage();
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                renderPage();
+            }
+        });
+
+        // Initial render
+        renderPage();
+    </script>
+</body>
+</html>
